@@ -115,23 +115,23 @@ RUN pip install --upgrade pip && \
     && conda clean -tipsy
 
 # NB: the COPY chown can't expand a bash variable for NB_USER
-COPY --chown=jovyan:users requirements.txt /tmp
+COPY requirements.txt /tmp
 
 # Install python2 and ipython2 kernel for jupyter notebook
 # Install tf packages which only support py2
-COPY --chown=jovyan:users install.sh /tmp/
+COPY install.sh /tmp/
 RUN chmod a+rx /tmp/install.sh && \
     /tmp/install.sh
 
 # Add basic config
-COPY --chown=jovyan:users  jupyter_notebook_config.py /tmp
+COPY jupyter_notebook_config.py /tmp
 
 # Wipe $HOME for PVC detection later
 WORKDIR $HOME
 RUN rm -fr $(ls -A $HOME)
 
 # Copy over init scripts
-COPY --chown=jovyan:users start-singleuser.sh start-notebook.sh start.sh pvc-check.sh /usr/local/bin/
+COPY start-singleuser.sh start-notebook.sh start.sh pvc-check.sh /usr/local/bin/
 RUN chmod a+rx /usr/local/bin/*
 
 # Configure container startup
